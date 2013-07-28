@@ -1,0 +1,17 @@
+#!/bin/sh
+# Display human-readable information from a certificate.
+set -e
+
+file="$1"
+[ "$file" = "-" ] && file=""
+
+if [ -n "$file" -a ! -f "$file" ] || [ -z "$file" -a -t 0 ]; then
+  echo "Usage: show-cert <file>" >&2
+  exit 1
+fi
+
+format=pem
+[ "${file##*.}" = "cer" ] && format=der
+
+exec openssl x509 -inform "$format" ${1:+-in "$1"} -noout -text \
+  -nameopt multiline -certopt no_pubkey,no_sigdump

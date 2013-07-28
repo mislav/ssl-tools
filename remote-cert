@@ -1,0 +1,14 @@
+#!/bin/sh
+# Usage: remote-cert HOST[:PORT] [HOST[:PORT] ...]
+set -e
+
+while [ -n "$1" ]; do
+  host="${1%:*}"
+  port="${1#*:}"
+  [ "$host" = "$port" ] && port=443
+
+  echo | openssl s_client -connect ${host}:${port} 2>&1 |\
+    sed -nEe '/^-+BEGIN/,/^-+END/p'
+
+  shift 1
+done

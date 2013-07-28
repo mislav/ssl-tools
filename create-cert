@@ -1,0 +1,17 @@
+#!/bin/sh
+# Usage: create-cert [CNAME=localhost] [ORGANIZATION]
+#
+# Creates a self-signed certificate and outputs it and its private key.
+set -e
+
+name="${1:-localhost}"
+org="$2"
+temp="${TMPDIR:-/tmp}/openssl-req.$$.$(date +%s)"
+
+openssl req \
+  -x509 -nodes -days 365 \
+  -subj "/O=$org/CN=$name" \
+  -newkey rsa:1024 -keyout "$temp" -out "$temp" 2>/dev/null
+
+cat "$temp"
+rm -f "$temp"

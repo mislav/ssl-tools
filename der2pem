@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+while [ -n "$1" ]; do
+  if ! [ -f "$1" ]; then
+    echo "invalid .cer file: \`$1'" >&2
+    exit 1
+  fi
+  openssl x509 -inform der -in "$1" -outform pem
+  shift 1
+done
