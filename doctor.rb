@@ -40,7 +40,7 @@ http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 failed_cert = failed_cert_reason = nil
 
 if mac_openssl
-  warn "warning: unable show failed certificate info on OS X's OpenSSL"
+  warn "warning: will not be able show failed certificate info on OS X's OpenSSL"
   # This drives me absolutely nuts. It seems that on Rubies compiled against OS X's
   # system OpenSSL, the mere fact of defining a `verify_callback` makes the
   # cert verification fail for requests that would otherwise be successful.
@@ -69,9 +69,9 @@ rescue OpenSSL::SSL::SSLError => e
 
   if failed_cert
     puts "\nThe server presented a certificate that could not be verified:"
-    puts "subject: #{failed_cert.subject}"
-    puts "issuer: #{failed_cert.issuer}"
-    puts "error code %s" % failed_cert_reason
+    puts "  subject: #{failed_cert.subject}"
+    puts "  issuer: #{failed_cert.issuer}"
+    puts "  error code %s" % failed_cert_reason
   end
 
   ca_file_missing = !File.exist?(ca_file) && !mac_openssl
@@ -79,8 +79,8 @@ rescue OpenSSL::SSL::SSLError => e
 
   if ca_file_missing || ca_path_empty
     puts "\nPossible causes:"
-    puts "- `%s' does not exist" % ca_file if ca_file_missing
-    puts "- `%s/' is empty" % ca_path if ca_path_empty
+    puts "  `%s' does not exist" % ca_file if ca_file_missing
+    puts "  `%s/' is empty" % ca_path if ca_path_empty
   end
 
   exit 1
